@@ -5,7 +5,9 @@ class NavLeft extends Component {
   render() {
     return (
       <div className="nav-left">
-        
+        <div className="head">
+          
+        </div>
       </div>
     );
   }

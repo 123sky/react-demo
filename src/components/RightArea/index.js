@@ -5,7 +5,7 @@ class NavLeft extends Component {
   render() {
     return (
       <div className="right-area">
-        哈哈哈
+        
       </div>
     );
   }
