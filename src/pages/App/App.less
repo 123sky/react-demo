@@ -1,0 +1,29 @@
+@import '../../style/common.less';
+.app {
+  height: 100%;
+  position: relative;
+  .left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100%;
+    background-color: @green;
+  }
+  .center {
+    position: absolute;
+    top: 0;
+    left: 260px;
+    right: 36%;
+    height: 100%;
+  }
+  .right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 36%;
+    height: 100%;
+    border-left: 1px solid #ededed;
+    background-color: #fafafa;
+  }
+}
