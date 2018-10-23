@@ -140,6 +140,7 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
+              // antd按需引入（babel-plugin-import）
               plugins: [
                 ['import',
                   [{
@@ -194,13 +195,16 @@ module.exports = {
           {
             test: /\.less$/,
             use: [
+              // 行内样式
               require.resolve('style-loader'),
+              // 解析成css
               {
                 loader: require.resolve('css-loader'),
                 options: {
                   importLoaders: 1,
                 },
               },
+              // 添加前缀
               {
                 loader: require.resolve('postcss-loader'),
                 options: {
@@ -221,10 +225,12 @@ module.exports = {
                   ],
                 },
               },
+              // 解析less文件
               {
                 loader: require.resolve('less-loader'),
+                // 解决按需引入ant时，less报错的问题
                 options: {
-                  javascriptEnabled: true
+                  javascriptEnabled: true 
                 }
               }
             ],
