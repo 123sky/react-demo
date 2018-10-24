@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './index.less';
 
-class NavLeft extends Component {
+class RightArea extends Component {
   render() {
     return (
       <div className="right-area">
@@ -11,4 +11,4 @@ class NavLeft extends Component {
   }
 }
 
-export default NavLeft
+export default RightArea

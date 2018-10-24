@@ -1,4 +1,119 @@
+@import '../../style/default.less';
 .nav-left {
+  position: relative;
   height: 100%;
   width: 100%;
+  .header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 15px;
+    font-size: 0;
+    background-color: @green;
+    z-index: 1;
+    .user {
+      display: inline-block;
+      height: 36px;
+      width: 170px;
+      overflow: hidden;
+      line-height: 36px;
+      cursor: pointer;
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: 50%;
+        overflow: hidden;
+        background: white;
+        margin-right: 10px;
+        vertical-align: top;
+      }
+      .user-name {
+        display: inline-block;
+        width: 100px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 400;
+      }
+    }
+    .tools {
+      display: inline-block;
+      vertical-align: top;
+      color: #fff;
+      font-size: 20px;
+      line-height: 36px;
+      .anticon {
+        margin: 5px;
+        cursor: pointer;
+        font-weight: 400;
+      }
+    }
+  }
+  .menu-wrap {
+    height: 100%;
+    padding-top: 66px;
+    box-sizing: border-box;
+    overflow-y: overlay;
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+      display: none;
+    }
+    &:hover::-webkit-scrollbar {
+      display: initial;
+    }
+    // 滚动条里面的小方块，能向上向下移动（或向左向右移动）
+    &::-webkit-scrollbar-thumb {
+      width: 8px;
+      height: 8px;
+      background: rgba(225, 225, 225, 0.5);
+    }
+    // 滚动条的轨道的两端按钮，由于通过点击微调小方块的位置。
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+  }
+}
+
+
+/*
+ * 覆盖样式
+ * ————————————————————————————————————————————————————————————————————————————————————————
+ */
+
+.ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left {
+  border: none;
+}
+.ant-menu{
+  background: initial;
+  color: #fff;
+  .ant-menu-item-divider{
+    background-color: rgba(0,0,0,.08);
+  }
+}
+
+.ant-menu-dark .ant-menu-item {
+  color: #fff;
+}
+
+
+.ant-menu-dark .ant-menu-inline.ant-menu-sub {
+  background: initial;
+  box-shadow: none;
+}
+.ant-menu-dark .ant-menu-submenu-open {
+  background: rgba(0,0,0,.09);
+}
+
+.ant-menu.ant-menu-dark .ant-menu-item-selected {
+  background: rgba(0,0,0,.2);
+}
+
+.ant-menu-submenu-active {
+  color: #fff;
+  background: rgba(0,0,0,.2)
+}
+
+.ant-menu-submenu-arrow {
+  color: #fff;
 }
