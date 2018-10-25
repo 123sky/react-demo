@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Icon, Menu } from "antd";
+import { NavLink } from 'react-router-dom'
 import axios from '../../axios';
 import "./index.less";
 import logo from "./logo.svg";
@@ -60,17 +61,21 @@ class NavLeft extends Component {
       )
     })
     await Promise.all(boardAjaxList)
-    this.setprojectListDom(projectList)
+    this.renderMenu(projectList)
   }
 
-  setprojectListDom = (projectList) => {
+  renderMenu = (projectList) => {
     let projectListDom = []
     projectList.data.forEach( (project) => {
 
       let boardListDom = []
       project.board.forEach (board=>{
         boardListDom.push((
-          <Menu.Item key={board.uid}>{board.name}</Menu.Item>
+          <Menu.Item key={board.uid}>
+            <NavLink to={{pathname:`/task/${board.uid}`}}>
+              {board.name}
+            </NavLink>
+          </Menu.Item>
         ))
       })
 
@@ -114,41 +119,41 @@ class NavLeft extends Component {
             style={{ width: '100%' }}>
             <Menu.Item
               key="static-all">
-              <span>
+              <NavLink to={{pathname:'task', search:"?type=all"}}>
                 <Icon type="mail" />
                 <span>所有任务</span>
-              </span>
+              </NavLink>
             </Menu.Item>
             <Menu.Item
               key="static-today">
-              <span>
+              <NavLink to={{pathname:'task', search:"?type=today"}}>
                 <Icon type="appstore" />
                 <span>今天</span>
-              </span>
+              </NavLink>
             </Menu.Item>
             <Menu.Item
               key="static-recent">
-              <span>
+              <NavLink to={{pathname:'task', search:"?type=recent"}}>
                 <Icon type="appstore" />
                 <span>最近7天</span>
-              </span>
+              </NavLink>
             </Menu.Item>
             <Menu.Divider />
             {this.state.projectListDom}
             <Menu.Divider />
             <Menu.Item
               key="static-finish">
-              <span>
+              <NavLink to={{pathname:'task', search:"?type=finish"}}>
                 <Icon type="appstore" />
                 <span>已完成</span>
-              </span>
+              </NavLink>
             </Menu.Item>
             <Menu.Item
               key="static-trash">
-              <span>
+              <NavLink to={{pathname:'task', search:"?type=trash"}}>
                 <Icon type="appstore" />
                 <span>垃圾桶</span>
-              </span>
+              </NavLink>
             </Menu.Item>
           </Menu>
         </div>

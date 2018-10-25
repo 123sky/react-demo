@@ -1,0 +1,23 @@
+@import '../../style/default.less';
+.catelog {
+  height: 100%;
+  position: relative;
+  .collapse-wrap {
+    height: calc(100vh - 68px);
+    overflow-y: overlay;
+  }
+  .ant-collapse,
+  .ant-collapse .ant-collapse-item,
+  .ant-collapse .ant-collapse-content{
+    border: none;
+  }
+
+  .ant-collapse-header {
+    background: #fdfdfd;
+    font-weight: 700;
+  }
+
+  .ant-collapse-content-box {
+    padding: 0 16px 16px;
+  }
+}

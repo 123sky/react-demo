@@ -1,0 +1,85 @@
+@import '../../style/default.less';
+.main {
+  height: 100%;
+  position: relative;
+}
+
+.left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100%;
+  background-color: @blue;
+  transition: all .3s ease;
+}
+.center {
+  position: absolute;
+  top: 0;
+  left: 260px;
+  right: 36%;
+  height: 100%;
+  overflow: hidden;
+}
+.right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 36%;
+  height: 100%;
+  border-left: 1px solid #ededed;
+}
+
+@media only screen and (min-width: 921px) and (max-width:1020px) {
+  .left {
+    z-index: 5;
+    left: -260px
+  }
+  .right {
+    right: 0;
+    width: 45%
+  }
+  .center {
+    left: 0;
+    right: 45%
+  }
+}
+
+@media only screen and (min-width: 461px) and (max-width:920px) {
+  .left {
+    z-index: 5;
+    left: -260px
+  }
+  .right {
+    display: none;
+    z-index: 4;
+    width: 70%;
+    right: -70%;
+    background-color: #fff
+  }
+  .center {
+    left: 0;
+    right: 0
+  }
+}
+
+@media only screen and (max-width: 460px) {
+  .center,
+  .right {
+    display: none
+  }
+  .left {
+    z-index: 5;
+    left: -270px;
+    width: 260px
+  }
+  .right {
+    z-index: 5;
+    right: -100%;
+    width: 100%
+  }
+  .center {
+    left: 0;
+    right: 0
+  }
+}

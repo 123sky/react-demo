@@ -5,7 +5,7 @@ class CenterArea extends Component {
   render() {
     return (
       <div className="center-area">
-        
+        {this.props.children}
       </div>
     );
   }

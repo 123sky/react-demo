@@ -1,0 +1,22 @@
+
+// 滚动条样式
+* {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    display: none;
+  }
+  &:hover::-webkit-scrollbar {
+    display: initial;
+  }
+  // 滚动条里面的小方块，能向上向下移动（或向左向右移动）
+  &::-webkit-scrollbar-thumb {
+    width: 8px;
+    height: 8px;
+    background: rgba(225, 225, 225, 0.5);
+  }
+  // 滚动条的轨道的两端按钮，由于通过点击微调小方块的位置。
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+}

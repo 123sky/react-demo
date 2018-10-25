@@ -1,0 +1,45 @@
+.catelog-item {
+  position: relative;
+
+  &:hover {
+    background-color: rgba(243,243,243,.5);
+    .more {
+      display: initial;
+    }
+  }
+
+  .checkbox {
+    position: absolute;
+    top: 6px;
+    left: 18px;
+  }
+
+  .input {
+    display: flex;
+    padding: 0 40px;
+    .ant-input {
+      padding: 7px 10px;
+      resize: none;
+      border: none;
+      border-bottom: 1px solid #ebebeb;
+      border-radius: 0;
+      color: rgba(0,0,0,.85);
+      background-color: initial;
+      &:focus{
+        box-shadow: none;
+      }
+    }
+    .ant-avatar {
+      margin-top: 5px;
+    }
+  }
+
+  .more {
+    position: absolute;
+    top: 6px;
+    right: 18px;
+    cursor: pointer;
+    color: #aaa;
+    display: none;
+  }
+}
