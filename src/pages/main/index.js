@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NavLeft from '../../components/NavLeft';
+import NavLeft from './NavLeft';
 import './index.less';
 
 class Main extends Component {

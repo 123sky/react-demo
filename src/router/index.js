@@ -19,13 +19,12 @@ export default class ERouter extends React.Component{
                 <Main 
                   centerArea = {
                     <div>
-                      <Route exact path='/task' component={Catelog} />
-                      <Route path='/task/:id' component={Catelog} />
+                      <Route path='/project/:projectId/board/:boardId' component={Catelog} />
                     </div>
                   }
                   rightArea = {
                     <div>
-                      <Route exact path='/task/:catelogId/detail/:taskId' component={Deitail} />
+                      <Route exact path='/project/:projectId/board/:catelogId/task/:taskId' component={Deitail} />
                     </div>
                   }
                 />

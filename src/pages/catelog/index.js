@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Collapse } from 'antd';
-import CenterHeader from '../../components/CenterHeader'
+import CenterHeader from './CenterHeader'
 import CatelogItem from './CatelogItem'
 import axios from '../../axios';
 import './index.less';
@@ -14,11 +14,11 @@ class Catelog extends Component {
   };
 
   componentDidMount () {
-    this.getCatelog(this.props.match.params.id)
+    this.getCatelog(this.props.match.params.boardId)
   }
 
   componentWillReceiveProps(props) {
-    this.getCatelog(props.match.params.id)
+    this.getCatelog(props.match.params.boardId)
   }
 
   getCatelog = async (uid) => {
@@ -33,7 +33,7 @@ class Catelog extends Component {
     return this.state.catelogList.map((catelog, index) => {
       let task = catelog.task_list.map(task => {
         return (
-          <CatelogItem key={task.uid} data={{task, boardId: this.props.match.params.id}}></CatelogItem>
+          <CatelogItem key={task.uid} data={{task, pathParams: this.props.match.params}}></CatelogItem>
         )
       })
       return (

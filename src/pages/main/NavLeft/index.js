@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Icon, Menu } from "antd";
 import { NavLink } from 'react-router-dom'
-import axios from '../../axios';
+import axios from '../../../axios';
 import "./index.less";
 import logo from "./logo.svg";
 
@@ -11,13 +11,29 @@ class NavLeft extends Component {
   rootSubmenuKeys = ["all", "today", "recent", "finish", "trash"];
 
   state = {
-    openKeys: ["all"],
-    projectListDom: ''
+    openKeys: [],
+    selectedKeys: [],
+    projectListDom: null
   };
 
   async componentDidMount(){
     this.getUser()
     this.getProjectList()
+    
+    this.initMenuOpenSelect()
+  }
+
+  initMenuOpenSelect = () => {
+    let pathName = window.location.hash.replace(/#|\?.*$/g, '')
+    let pathNames = pathName.split('/')
+    let selectedKeys = pathNames[1] === 'project' ? [pathNames[4]] : [pathName]
+    let openKeys = [pathName.split('/')[2]] || []
+    this.setState({selectedKeys})
+    this.setState({openKeys})
+  }
+
+  onSelect = ({ item, key, selectedKeys }) => {
+    this.setState({selectedKeys: [key]})
   }
 
   onOpenChange = openKeys => {
@@ -31,12 +47,6 @@ class NavLeft extends Component {
       this.setState({
         openKeys: latestOpenKey ? [latestOpenKey] : []
       });
-    }
-  };
-
-  onSelect = ({ item, key, selectedKeys }) => {
-    if(!key.startsWith('static-')){
-      
     }
   }
 
@@ -72,7 +82,7 @@ class NavLeft extends Component {
       project.board.forEach (board=>{
         boardListDom.push((
           <Menu.Item key={board.uid}>
-            <NavLink to={{pathname:`/task/${board.uid}`}}>
+            <NavLink to={{pathname:`/project/${project.uid}/board/${board.uid}`}}>
               {board.name}
             </NavLink>
           </Menu.Item>
@@ -113,27 +123,27 @@ class NavLeft extends Component {
             mode="inline"
             theme="dark"
             openKeys={this.state.openKeys}
-            defaultSelectedKeys={['all']}
-            onSelect={this.onSelect}
             onOpenChange={this.onOpenChange}
+            selectedKeys={this.state.selectedKeys}
+            onSelect={this.onSelect}
             style={{ width: '100%' }}>
             <Menu.Item
-              key="static-all">
-              <NavLink to={{pathname:'task', search:"?type=all"}}>
+              key="/all">
+              <NavLink to={{pathname:'/all'}}>
                 <Icon type="mail" />
                 <span>所有任务</span>
               </NavLink>
             </Menu.Item>
             <Menu.Item
-              key="static-today">
-              <NavLink to={{pathname:'task', search:"?type=today"}}>
+              key="/today">
+              <NavLink to={{pathname:'/today'}}>
                 <Icon type="appstore" />
                 <span>今天</span>
               </NavLink>
             </Menu.Item>
             <Menu.Item
-              key="static-recent">
-              <NavLink to={{pathname:'task', search:"?type=recent"}}>
+              key="/recent">
+              <NavLink to={{pathname:'/recent'}}>
                 <Icon type="appstore" />
                 <span>最近7天</span>
               </NavLink>
@@ -142,15 +152,15 @@ class NavLeft extends Component {
             {this.state.projectListDom}
             <Menu.Divider />
             <Menu.Item
-              key="static-finish">
-              <NavLink to={{pathname:'task', search:"?type=finish"}}>
+              key="/finish">
+              <NavLink to={{pathname:'/finish'}}>
                 <Icon type="appstore" />
                 <span>已完成</span>
               </NavLink>
             </Menu.Item>
             <Menu.Item
-              key="static-trash">
-              <NavLink to={{pathname:'task', search:"?type=trash"}}>
+              key="/trash">
+              <NavLink to={{pathname:'/trash'}}>
                 <Icon type="appstore" />
                 <span>垃圾桶</span>
               </NavLink>

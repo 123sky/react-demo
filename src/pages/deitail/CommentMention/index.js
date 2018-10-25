@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Mention, Button} from 'antd'
-import axios from '../../../axios'
 import './index.less';
 
 const users = ['afc163', 'benjycui', 'yiminghe', 'jljsj33', 'dqaria', 'RaoHai'];
@@ -33,7 +32,7 @@ class CommentMention extends Component {
   render () {
     return (
       <div className="comment-mention">
-        <div class="mention-wrap">
+        <div className="mention-wrap">
           <Mention
             loading={this.state.loading}
             suggestions={this.state.suggestions}

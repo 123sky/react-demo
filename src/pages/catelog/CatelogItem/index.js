@@ -12,7 +12,7 @@ class CatelogItem extends Component {
   }
 
   detail = () => {
-    this.props.history.push(`/task/${this.props.data.boardId}/detail/${this.props.data.task.uid}`)
+    this.props.history.push(`/project/${this.props.data.pathParams.projectId}/board/${this.props.data.pathParams.boardId}/task/${this.props.data.task.uid}`)
   }
 
   getAvatar = () => {
