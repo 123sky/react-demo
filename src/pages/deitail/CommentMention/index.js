@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Mention, Button} from 'antd'
+import { Mention, Button, Avatar, Form} from 'antd'
 import './index.less';
 
-const users = ['afc163', 'benjycui', 'yiminghe', 'jljsj33', 'dqaria', 'RaoHai'];
+const Nav = Mention.Nav;
+const FormItem = Form.Item;
+const { toString, getMentions } = Mention;
 
 class CommentMention extends Component {
 
@@ -11,39 +13,65 @@ class CommentMention extends Component {
     suggestions: []
   }
 
-  fetchSuggestions = (value, callback) => {
-    setTimeout(() => {
-      callback(users.filter(item => item.indexOf(value) !== -1));
-    }, 500);
+  onSearchChange = (value) => {
+    let suggestions = this.props.members.map(member => (
+      <Nav
+        value={member.name}
+        data={member}
+      >
+        <Avatar
+          src={member.avatar}
+          size="small"
+          style={{ width: 14, height: 14, marginRight: 8, top: -1, position: 'relative' }}
+        />
+        {member.name}
+      </Nav>
+    ));
+    this.setState({suggestions})
   }
 
-  onSearchChange = (value) => {
-    this.fetchSuggestions(value, (suggestions) => {
-      this.setState({
-        suggestions,
-        loading: false,
-      });
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      console.log(toString(values.mentionContent), getMentions(values.mentionContent))
     });
-    this.setState({
-      loading: true,
-    });
+    /* console.log(this.props.form)
+    console.log(toString(this.state.value),getMentions(this.state.value)) */
   }
 
   render () {
+    const { getFieldDecorator} = this.props.form;
     return (
       <div className="comment-mention">
-        <div className="mention-wrap">
-          <Mention
-            loading={this.state.loading}
-            suggestions={this.state.suggestions}
-            onSearchChange={this.onSearchChange}
-            placement="top"
-          />
-        </div>
-        <Button type="primary">发送</Button>
+        <Form layout="horizontal" onSubmit={this.handleSubmit}>
+          <div className="form">
+            <div className="input">
+              <FormItem>
+                {getFieldDecorator('mentionContent', {})(
+                  <Mention
+                    suggestions={this.state.suggestions}
+                    onSearchChange={this.onSearchChange}
+                    placement="top"
+                    placeholder="通过@通知项目成员"
+                  />
+                )}
+              </FormItem>
+            </div>
+            <div className="btn">
+              <FormItem>
+                <Button
+                  type="primary"
+                  htmlType="submit">
+                  发 送
+                </Button>
+              </FormItem>
+            </div>
+          </div>
+          
+        </Form>
       </div>
     )
   }
 }
 
-export default CommentMention;
+export default Form.create()(CommentMention);

@@ -24,16 +24,19 @@ export default class Axios {
         } */
         let baseApi = 'https://class.h3c.com:8001/chat/';
         return new Promise((resolve,reject)=>{
-            axios({
+            let config = {
                 headers: {
                     Authorization: 'Token o5dHD5CANL93X_RUPDKotAQ9k5t4'
                 },
                 url:options.url,
-                method:'get',
+                method:'GET',
                 baseURL:baseApi,
                 timeout:5000,
-                params: (options.data && options.data.params) || ''
-            }).then((response)=>{
+                params: '',
+                data: {}
+            }
+            config = Object.assign(config, options)
+            axios(config).then((response)=>{
                 /* if (options.data && options.data.isShowLoading !== false) {
                     loading = document.getElementById('ajaxLoading');
                     loading.style.display = 'none';

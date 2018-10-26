@@ -16,7 +16,7 @@
 
   .input {
     display: flex;
-    padding: 0 40px;
+    padding: 0 70px 0 40px;
     .ant-input {
       padding: 7px 10px;
       resize: none;
@@ -29,8 +29,15 @@
         box-shadow: none;
       }
     }
-    .ant-avatar {
-      margin-top: 5px;
+  }
+
+  .avatar-wrap {
+    position: absolute;
+    right: 44px;
+    top: 5px;
+    cursor: pointer;
+    .add-executor{
+      font-size: 24px;
     }
   }
 
@@ -41,5 +48,9 @@
     cursor: pointer;
     color: #aaa;
     display: none;
+    z-index: 500;
   }
+}
+.ant-dropdown {
+  min-width: 150px;
 }

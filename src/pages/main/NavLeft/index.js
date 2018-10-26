@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Icon, Menu } from "antd";
+import { Icon, Menu, Dropdown  } from "antd";
 import { NavLink } from 'react-router-dom'
-import axios from '../../../axios';
 import "./index.less";
 import logo from "./logo.svg";
 
@@ -16,14 +15,16 @@ class NavLeft extends Component {
     projectListDom: null
   };
 
-  async componentDidMount(){
+  async componentDidMount() {
     this.getUser()
-    this.getProjectList()
-    
     this.initMenuOpenSelect()
   }
 
-  initMenuOpenSelect = () => {
+  componentWillReceiveProps (props) {
+    this.renderMenu(props.projectList)
+  }
+
+  initMenuOpenSelect = (projectList) => {
     let pathName = window.location.hash.replace(/#|\?.*$/g, '')
     let pathNames = pathName.split('/')
     let selectedKeys = pathNames[1] === 'project' ? [pathNames[4]] : [pathName]
@@ -34,6 +35,7 @@ class NavLeft extends Component {
 
   onSelect = ({ item, key, selectedKeys }) => {
     this.setState({selectedKeys: [key]})
+    this.props.initCurrentBoard(item.props.project, item.props.board)
   }
 
   onOpenChange = openKeys => {
@@ -50,41 +52,35 @@ class NavLeft extends Component {
     }
   }
 
+  handleOperationClick = (e) => {
+    e.stopPropagation()
+  }
+
   getUser = () => {
 
   }
 
-  getProjectList = async () => {
-    let projectList = await axios.ajax({ url:'project/list/?user_id=137e0c7a-08ab-4217-b7b0-2d987d1fd03f' })
-    console.log()
-    let boardAjaxList = []
-    projectList.data.forEach(project => {
-      boardAjaxList.push(
-        new Promise(resolve=>{
-          axios.ajax({
-            url : `board/list/?project_id=${project.uid}`
-          }).then(res=>{
-            project.board = res.data
-            resolve()
-          })
-        })
-      )
-    })
-    await Promise.all(boardAjaxList)
-    this.renderMenu(projectList)
-  }
-
   renderMenu = (projectList) => {
     let projectListDom = []
-    projectList.data.forEach( (project) => {
-
+    const operationMenu = (
+      <Menu>
+        <Menu.Item key="1"><Icon type="form" theme="outlined" /><span>修 改</span></Menu.Item>
+        <Menu.Item key="2"><Icon type="delete" theme="outlined" /><span>删 除</span></Menu.Item>
+      </Menu>
+    )
+    projectList.forEach( (project) => {
       let boardListDom = []
       project.board.forEach (board=>{
         boardListDom.push((
-          <Menu.Item key={board.uid}>
+          <Menu.Item key={board.uid} board={board.uid} project={project.uid}>
             <NavLink to={{pathname:`/project/${project.uid}/board/${board.uid}`}}>
               {board.name}
             </NavLink>
+            <div className="operation" onClick={this.handleOperationClick}>
+              <Dropdown overlay={operationMenu} trigger={['click']}>
+                <Icon type="ellipsis" theme="outlined" />
+              </Dropdown>
+            </div>
           </Menu.Item>
         ))
       })

@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
 import { Menu, Dropdown, Icon } from 'antd';
+import {withRouter } from 'react-router';
 import './index.less';
 
 class CenterHeader extends Component {
+
+  showFile = () => {
+    this.props.history.push(`/project/${this.props.match.params.projectId}/board/${this.props.match.params.boardId}/file`)
+  }
+
+  showStatistics = () => {
+    this.props.history.push(`/project/${this.props.match.params.projectId}/board/${this.props.match.params.boardId}/statistics`)
+  }
   
   render() {
     const sortMenu = (
@@ -33,10 +42,10 @@ class CenterHeader extends Component {
     );
     return (
       <div className="center-header">
-        <h5 className="title">智慧教育开发组</h5>
+        <h5 className="title">{this.props.board.name}</h5>
         <div className="tools">
-          <Icon type="folder-open" theme="outlined" />
-          <Icon type="bar-chart" theme="outlined" />
+          <Icon type="folder-open" theme="outlined" onClick={this.showFile}/>
+          <Icon type="bar-chart" theme="outlined" onClick={this.showStatistics}/>
           <Dropdown overlay={sortMenu} trigger={['click']}>
             <Icon type="clock-circle" theme="outlined" />
           </Dropdown>
@@ -49,4 +58,4 @@ class CenterHeader extends Component {
   }
 }
 
-export default CenterHeader
+export default withRouter(CenterHeader)

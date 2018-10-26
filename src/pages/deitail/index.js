@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Checkbox,Icon, Avatar, Tag, Input, DatePicker } from 'antd';
 import CommentMention from './CommentMention'
+import {withRouter } from 'react-router';
 import axios from '../../axios'
+import eventProxy from '../../utils/eventProxy'
 import './index.less';
 import moment from 'moment'
 
@@ -10,23 +12,19 @@ const {TextArea} = Input
 class Detail extends Component {
 
   state = {
-    data: {},
     process: []
   }
 
   componentDidMount () {
-    this.getTaskDetail(this.props.match.params.taskId)
     this.getProcess(this.props.match.params.taskId)
+
+    eventProxy.on('taskWrittenContentChange', (val)=>{
+      this.setState({data:{written_content: val}})
+    });
   }
 
   componentWillReceiveProps (props) {
-    this.getTaskDetail(props.match.params.taskId)
     this.getProcess(props.match.params.taskId)
-  }
-
-  getTaskDetail = async (uid) => {
-    let res = await axios.ajax({url: `task/${uid}/`})
-    this.setState({data: res || {}})
   }
 
   getProcess = (task_id) => {
@@ -59,11 +57,11 @@ class Detail extends Component {
   }
 
   getParticipant = () => {
-    if(!this.state.data.participant){
+    if(!this.props.task.participant){
       return
     }
     
-    return this.state.data.participant.map( participant => {
+    return this.props.task.participant.map( participant => {
       return (
         <Avatar key={participant.uid} src={participant.avatar} title={participant.name}></Avatar>
       )
@@ -71,7 +69,7 @@ class Detail extends Component {
   }
 
   getTag = () => {
-    switch (this.state.data.level) {
+    switch (this.props.task.level) {
       case 0 :
         return <Tag color="#f81d32">紧急</Tag>
       case 1 :
@@ -138,9 +136,9 @@ class Detail extends Component {
   }
 
   getExecutor = () => {
-    if(this.state.data.executor){
+    if(this.props.task.executor){
       return (
-        <Avatar title={'执行者：'+this.state.data.executor.name} src={this.state.data.executor.avatar}></Avatar>
+        <Avatar title={'执行者：'+this.props.task.executor.name} src={this.props.task.executor.avatar}></Avatar>
       )
     }
   }
@@ -151,14 +149,15 @@ class Detail extends Component {
         <div className="detail-content">
           <div className="detail-header">
             <div className="checkbox">
-              <Checkbox onChange={this.onChange}></Checkbox>
+              <Checkbox onChange={this.onChange} key={this.props.task.uid} defaultChecked={this.props.task.is_finished === 1}></Checkbox>
             </div>
             <div className="header-center">
               <div className="level">{this.getTag()}</div>
               <Icon type="calendar" theme="outlined" style={{fontSize: '16px', marginRight: '5px'}}/>
               <div className="date-picker-wrap">
                 <DatePicker
-                  defaultValue={moment(this.state.data.deadline)}
+                  key={this.props.task.uid}
+                  defaultValue={this.props.task.deadline ? moment(new Date(this.props.task.deadline)): null}
                   showTime
                   format="YYYY-MM-DD HH:mm:ss" 
                   placeholder="截至日期"/>
@@ -168,13 +167,13 @@ class Detail extends Component {
           </div>
           <div className="content">
             <div className="title">
-              <TextArea autosize defaultValue={this.state.data.written_content} key={this.state.data.written_content}/>
+              <TextArea autosize defaultValue={this.props.task.written_content} key={this.props.task.written_content}/>
             </div>
             <div className="note">
-              <TextArea autosize defaultValue={this.state.data.note} key={this.state.data.note} placeholder="描述"/>
+              <TextArea autosize defaultValue={this.props.task.note} key={this.props.task.note} placeholder="描述"/>
             </div>
             <div className="file">
-              <div className="sub-title">关联文件 · {this.state.data.files?this.state.data.files.length:0}</div>
+              <div className="sub-title">关联文件 · {this.props.task.files?this.props.task.files.length:0}</div>
               <div className="file-list">
                 <div className="add-file">
                   <Icon type="plus-circle" theme="outlined" />
@@ -184,14 +183,14 @@ class Detail extends Component {
           </div>
           <div className="process">
             <div className="avatar-list-wrap">
-              <div className="sub-title">参与者 · {this.state.data.participant?this.state.data.participant.length:0}</div>
+              <div className="sub-title">参与者 · {this.props.task.participant?this.props.task.participant.length:0}</div>
               <div className="avatar-list">{this.getParticipant()}</div>
             </div>
             {this.getProcessDom()}
           </div>
         </div>
         <div className="mention">
-          <CommentMention/>
+          <CommentMention members={this.props.project.members}/>
         </div>
       </div>
       
@@ -199,4 +198,4 @@ class Detail extends Component {
   }
 }
 
-export default Detail;
+export default withRouter (Detail);
