@@ -3,58 +3,12 @@ import { Checkbox,Icon, Avatar, Tag, Input, DatePicker } from 'antd';
 import CommentMention from './CommentMention'
 import {withRouter } from 'react-router';
 import axios from '../../axios'
-import eventProxy from '../../utils/eventProxy'
 import './index.less';
 import moment from 'moment'
 
 const {TextArea} = Input
 
 class Detail extends Component {
-
-  state = {
-    process: []
-  }
-
-  componentDidMount () {
-    this.getProcess(this.props.match.params.taskId)
-
-    eventProxy.on('taskWrittenContentChange', (val)=>{
-      this.setState({data:{written_content: val}})
-    });
-  }
-
-  componentWillReceiveProps (props) {
-    this.getProcess(props.match.params.taskId)
-  }
-
-  getProcess = (task_id) => {
-    Promise.all([axios.ajax({url: `task_comment/list/?task_id=${task_id}`}), axios.ajax({url: `task_history/list/?task_id=${task_id}`})]).then((res) => {
-      let list = []
-      // 评论
-      if (res[0].data && res[0].data.length > 0) {
-        let data = []
-        res[0].data.forEach(element => {
-          element.action = -1
-          element.dateTime = element.create_time
-          data.push(element)
-        });
-        list = list.concat(data)
-      }
-      // 历史记录
-      if (res[1].data && res[1].data.length > 0) {
-        let data = []
-        res[1].data.forEach(element => {
-          element.dateTime = element.create_time
-          data.push(element)
-        });
-        list = list.concat(data)
-      }
-      list.sort(function(last,next){
-        return new Date(next.create_time).getTime() - new Date(last.create_time).getTime()
-      })
-      this.setState({process: list})
-    })
-  }
 
   getParticipant = () => {
     if(!this.props.task.participant){
@@ -82,7 +36,7 @@ class Detail extends Component {
   }
 
   getProcessDom = () => {
-    return this.state.process.map(process => {
+    return this.props.process.map(process => {
       switch (process.action) {
         case -1 :
           return this.getCommentDom(process)
@@ -149,7 +103,7 @@ class Detail extends Component {
         <div className="detail-content">
           <div className="detail-header">
             <div className="checkbox">
-              <Checkbox onChange={this.onChange} key={this.props.task.uid} defaultChecked={this.props.task.is_finished === 1}></Checkbox>
+              <Checkbox onChange={this.onChange} key={this.props.task.is_finished} defaultChecked={this.props.task.is_finished === 1}></Checkbox>
             </div>
             <div className="header-center">
               <div className="level">{this.getTag()}</div>

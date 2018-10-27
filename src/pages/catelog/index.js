@@ -11,32 +11,12 @@ const FormItem = Form.Item;
 
 class Catelog extends Component {
 
-  state = {
-    catelogList: []
-  };
-
-  componentDidMount () {
-    this.getCatelog(this.props.match.params.boardId)
-  }
-
-  componentWillReceiveProps(props) {
-    this.getCatelog(props.match.params.boardId)
-  }
-
-  getCatelog = async (uid) => {
-    let res = await axios.ajax({ url: `catalog/list?board_id=${uid}`})
-    
-    this.setState ({
-      catelogList: res.data
-    }) 
-  }
-
   setCurrentTask = (taskId) => {
     this.props.setCurrentTask(taskId)
   }
 
-  handleWrittenContent = (str) => {
-    this.props.handleWrittenContent(str)
+  handleTaskChange = (type, val) => {
+    this.props.handleTaskChange(type, val)
   }
 
   updateTask = (data) => {
@@ -56,7 +36,7 @@ class Catelog extends Component {
         written_content: e.target.value
       }
     }).then(res=>{
-      let catelogList = this.state.catelogList.map(catelogItem => {
+      let catelogList = this.props.catelogList.map(catelogItem => {
         if (catelogItem.uid === catelog.uid) {
           catelogItem.task_list.unshift(res)
           return catelogItem
@@ -71,13 +51,13 @@ class Catelog extends Component {
 
   renderCatelog = () => {
     const { getFieldDecorator } = this.props.form;
-    return this.state.catelogList.map((catelog, index) => {
+    return this.props.catelogList.map((catelog, index) => {
       let task = catelog.task_list.map(task => {
         return (
           <CatelogItem key={task.uid}
             data={{task, pathParams: this.props.match.params}}
             setCurrentTask = {(taskId=>{this.setCurrentTask(taskId)})}
-            handleWrittenContent = {(str=>{this.handleWrittenContent(str)})}
+            handleTaskChange = {((type, val)=>{this.handleTaskChange(type, val)})}
             updateTask = {(data=>{this.updateTask(data)})}></CatelogItem>
         )
       })

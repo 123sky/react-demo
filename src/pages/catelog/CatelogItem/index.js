@@ -13,10 +13,6 @@ const menu = (
 
 class CatelogItem extends Component {
 
-  onChange = (e) => {
-    
-  }
-
   detail = () => {
     this.props.history.push(`/project/${this.props.data.pathParams.projectId}/board/${this.props.data.pathParams.boardId}/task/${this.props.data.task.uid}`)
     this.props.setCurrentTask(this.props.data.task.uid)
@@ -35,26 +31,35 @@ class CatelogItem extends Component {
     }
   }
 
-  handleWrittenContent = (e) => {
-    this.props.handleWrittenContent(e.target.value);
+  handleTaskChange (type, e) {
+    if(type === 'is_finished') {
+      this.props.handleTaskChange(type, e.target.checked ? 1 : 0);
+      this.updateTask(type, e)
+      return
+    }
+    this.props.handleTaskChange(type, e.target.value);
   }
 
-  updateTask = (e) => {
-    this.props.updateTask({written_content: e.target.value, uid: this.props.data.task.uid});
+  updateTask = (type, e) => {
+    if(type === 'is_finished') {
+      this.props.updateTask({[type]: e.target.checked, uid: this.props.data.task.uid});
+      return
+    }
+    this.props.updateTask({[type]: e.target.value, uid: this.props.data.task.uid});
   }
 
   render() {
     return (
       <div className="catelog-item" style={{opacity: this.props.data.task.is_finished === 1?'0.5':'1'}}>
         <div className="checkbox">
-          <Checkbox onChange={this.onChange} 
+          <Checkbox onChange={this.handleTaskChange.bind(this, 'is_finished')}
             defaultChecked={this.props.data.task.is_finished === 1}></Checkbox>
         </div>
         <div className="input" onClick={this.detail}>
           <Dropdown overlay={menu} trigger={['contextMenu']}>
             <Input defaultValue={this.props.data.task.written_content} 
-              onChange={this.handleWrittenContent} 
-              onBlur={this.updateTask}/>
+              onChange={this.handleTaskChange.bind(this, 'written_content')} 
+              onBlur={this.updateTask.bind(this, 'written_content')}/>
           </Dropdown>
         </div>
         <div className="avatar-wrap">
