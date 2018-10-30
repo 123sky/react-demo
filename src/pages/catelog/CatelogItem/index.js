@@ -3,14 +3,6 @@ import { Checkbox, Input, Icon, Avatar, Dropdown, Menu } from 'antd';
 import {withRouter } from 'react-router';
 import './index.less';
 
-const menu = (
-  <Menu>
-    <Menu.Item key="1">日期</Menu.Item>
-    <Menu.Item key="2">优先级</Menu.Item>
-    <Menu.Item key="3">删除</Menu.Item>
-  </Menu>
-)
-
 class CatelogItem extends Component {
 
   detail = () => {
@@ -31,6 +23,17 @@ class CatelogItem extends Component {
     }
   }
 
+  getMenu = (uid) => {
+    return (
+      <Menu>
+        <Menu.Item key="1">日期</Menu.Item>
+        <Menu.Item key="2">优先级</Menu.Item>
+        <Menu.Item key="3" onClick={this.deleteTask} uid={uid}>删除</Menu.Item>
+      </Menu>
+    )
+
+  }
+
   handleTaskChange (type, e) {
     if(type === 'is_finished') {
       this.props.handleTaskChange(type, e.target.checked ? 1 : 0);
@@ -48,6 +51,10 @@ class CatelogItem extends Component {
     this.props.updateTask({[type]: e.target.value, uid: this.props.data.task.uid});
   }
 
+  deleteTask = ({item:{props:{uid}}}) => {
+    console.log(uid)
+  }
+
   render() {
     return (
       <div className="catelog-item" style={{opacity: this.props.data.task.is_finished === 1?'0.5':'1'}}>
@@ -56,7 +63,7 @@ class CatelogItem extends Component {
             defaultChecked={this.props.data.task.is_finished === 1}></Checkbox>
         </div>
         <div className="input" onClick={this.detail}>
-          <Dropdown overlay={menu} trigger={['contextMenu']}>
+          <Dropdown overlay={this.getMenu(this.props.data.task.uid)} trigger={['contextMenu']}>
             <Input defaultValue={this.props.data.task.written_content} 
               onChange={this.handleTaskChange.bind(this, 'written_content')} 
               onBlur={this.updateTask.bind(this, 'written_content')}/>
@@ -66,7 +73,7 @@ class CatelogItem extends Component {
           {this.getAvatar()}
         </div>
         <div className="more">
-          <Dropdown overlay={menu} trigger={['click']}>
+          <Dropdown overlay={this.getMenu(this.props.data.task.uid)} trigger={['click']}>
             <Icon type="ellipsis" theme="outlined" />
           </Dropdown>
         </div>

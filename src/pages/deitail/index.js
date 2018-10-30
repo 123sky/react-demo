@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Checkbox,Icon, Avatar, Tag, Input, DatePicker } from 'antd';
 import CommentMention from './CommentMention'
 import {withRouter } from 'react-router';
-import axios from '../../axios'
 import './index.less';
 import moment from 'moment'
 

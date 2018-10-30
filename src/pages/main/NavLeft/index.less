@@ -68,6 +68,15 @@
       display: none;
     }
   }
+ 
+  .create-project {
+   .ant-menu-submenu-arrow {
+     display: none;
+   }
+   &.ant-menu-submenu-open {
+      background: initial;
+  }
+ }
 }
 .ant-dropdown {
   min-width: 150px;
@@ -78,6 +87,16 @@
  * 覆盖样式
  * ————————————————————————————————————————————————————————————————————————————————————————
  */
+
+
+ .ant-menu > .ant-menu-item-divider {
+   margin: 0;
+ }
+ .ant-menu-inline .ant-menu-submenu-title,
+ .ant-menu-inline .ant-menu-item {
+   margin-top: 0;
+   margin-bottom: 0;
+ }
 
 .ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left {
   border: none;

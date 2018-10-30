@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { Icon, Menu, Dropdown  } from "antd";
+import { Icon, Menu, Dropdown } from "antd";
 import { NavLink } from 'react-router-dom'
+import CreateProject from '../CreateProject'
 import "./index.less";
 import logo from "./logo.svg";
+import axios from "../../../axios";
 
 const SubMenu = Menu.SubMenu;
 
@@ -12,7 +14,8 @@ class NavLeft extends Component {
   state = {
     openKeys: [],
     selectedKeys: [],
-    projectListDom: null
+    projectListDom: null,
+    visible: false
   };
 
   async componentDidMount() {
@@ -39,17 +42,16 @@ class NavLeft extends Component {
   }
 
   onOpenChange = openKeys => {
-    console.log(openKeys)
     const latestOpenKey = openKeys.find(
       key => this.state.openKeys.indexOf(key) === -1
     );
-    if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-      this.setState({ openKeys });
-    } else {
-      this.setState({
-        openKeys: latestOpenKey ? [latestOpenKey] : []
-      });
+    if(latestOpenKey === 'create') {
+      this.setState({visible: true})
+      return
     }
+    this.setState({
+      openKeys: latestOpenKey ? [latestOpenKey] : []
+    });
   }
 
   handleOperationClick = (e) => {
@@ -58,6 +60,31 @@ class NavLeft extends Component {
 
   getUser = () => {
 
+  }
+
+  saveFormRef = (formRef) => {
+    this.formRef = formRef;
+  }
+
+  handleSubmit = () => {
+    const form = this.formRef.props.form;
+    form.validateFields((err, values) => {
+      if (err) {
+        return;
+      }
+      axios.ajax({
+        method: 'Post',
+        url: 'project/',
+        data: values
+      }).then(res=>{
+        form.resetFields();
+        this.setState({ visible: false });
+      })
+    });
+  }
+
+  handleCancel = () => {
+    this.setState({ visible: false });
   }
 
   renderMenu = (projectList) => {
@@ -98,6 +125,20 @@ class NavLeft extends Component {
         </SubMenu>
       ))
     })
+
+    // 添加项目按钮
+    projectListDom.push ((
+      <SubMenu
+        className="create-project"
+        key="create"
+        title={
+          <span>
+            <Icon type="plus-circle" theme="outlined" />
+            <span>新建项目</span>
+          </span>
+        }>
+      </SubMenu>
+    ))
     this.setState({ projectListDom })
   }
 
@@ -144,9 +185,9 @@ class NavLeft extends Component {
                 <span>最近7天</span>
               </NavLink>
             </Menu.Item>
-            <Menu.Divider />
+            <Menu.Divider style={{backgroundColor: 'rgba(0, 0, 0, 0.2)'}}/>
             {this.state.projectListDom}
-            <Menu.Divider />
+            <Menu.Divider style={{backgroundColor: 'rgba(0, 0, 0, 0.2)'}}/>
             <Menu.Item
               key="/finish">
               <NavLink to={{pathname:'/finish'}}>
@@ -163,6 +204,12 @@ class NavLeft extends Component {
             </Menu.Item>
           </Menu>
         </div>
+        <CreateProject
+          wrappedComponentRef={this.saveFormRef}
+          visible={this.state.visible}
+          onCancel={this.handleCancel}
+          onOk={this.handleSubmit}
+        ></CreateProject>
       </div>
     );
   }
