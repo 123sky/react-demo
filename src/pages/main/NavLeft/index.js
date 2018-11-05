@@ -15,11 +15,11 @@ class NavLeft extends Component {
     openKeys: [],
     selectedKeys: [],
     projectListDom: null,
-    visible: false
+    visible: false,
+    user: JSON.parse(sessionStorage.getItem('user'))
   };
 
   async componentDidMount() {
-    this.getUser()
     this.initMenuOpenSelect()
   }
 
@@ -56,10 +56,6 @@ class NavLeft extends Component {
 
   handleOperationClick = (e) => {
     e.stopPropagation()
-  }
-
-  getUser = () => {
-
   }
 
   saveFormRef = (formRef) => {
@@ -147,8 +143,8 @@ class NavLeft extends Component {
       <div className="nav-left">
         <div className="header">
           <div className="user">
-            <img className="avatar" src={logo} alt="头像" />
-            <p className="user-name">陈建朋</p>
+            <img className="avatar" src={this.state.user.avatar} alt="头像" />
+            <p className="user-name">{this.state.user.name}</p>
           </div>
           <div className="tools">
             <Icon type="bell" theme="outlined" />

@@ -35,8 +35,6 @@ class CommentMention extends Component {
     this.props.form.validateFields((err, values) => {
       console.log(toString(values.mentionContent), getMentions(values.mentionContent))
     });
-    /* console.log(this.props.form)
-    console.log(toString(this.state.value),getMentions(this.state.value)) */
   }
 
   render () {

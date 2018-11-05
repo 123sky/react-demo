@@ -31,7 +31,7 @@ class Main extends Component {
 
   getProjectList = async () => {
     let projectList = await axios.ajax({ url:'project/list/?user_id=137e0c7a-08ab-4217-b7b0-2d987d1fd03f' })
-    console.log()
+    console.log(projectList)
     let boardAjaxList = []
     projectList.data.forEach(project => {
       boardAjaxList.push(
