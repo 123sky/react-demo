@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch} from 'react-router-dom'
 import NavLeft from './NavLeft';
-import Catelog from '../catelog'
+import Catalog from '../catalog'
 import Deitail from '../deitail'
 import Statistics from '../statistics'
 import File from '../file'
@@ -14,7 +14,7 @@ class Main extends Component {
     projectList: [],
     currentProject: {},
     currentBoard: {},
-    CurrentCatelogs: [],
+    CurrentCatalogs: [],
     currentTask: {},
     currentProcess: []
   }
@@ -22,7 +22,7 @@ class Main extends Component {
   componentDidMount () {
     this.getProjectList()
     this.initTask()
-    this.initCatelogs()
+    this.initCatalogs()
   }
 
   /*
@@ -31,7 +31,6 @@ class Main extends Component {
 
   getProjectList = async () => {
     let projectList = await axios.ajax({ url:'project/list/?user_id=137e0c7a-08ab-4217-b7b0-2d987d1fd03f' })
-    console.log(projectList)
     let boardAjaxList = []
     projectList.data.forEach(project => {
       boardAjaxList.push(
@@ -62,10 +61,10 @@ class Main extends Component {
     this.setCurrentProject(project || {})
     let board = project ? project.board.find(board => {return board.uid === boradId}) : {}
     this.setCurrentBoard(board || {})
-    this.initCatelogs(board.uid)
+    this.initCatalogs(board.uid)
   }
 
-  initCatelogs = async (boradId) => {
+  initCatalogs = async (boradId) => {
     if(!boradId) {
       let pathName = window.location.hash.replace(/#|\?.*$/g, '')
       let pathNames = pathName.split('/')
@@ -74,7 +73,7 @@ class Main extends Component {
     if(!boradId){ return }
     let res = await axios.ajax({ url: `catalog/list?board_id=${boradId}`})
     
-    this.setState ({ CurrentCatelogs: res.data }) 
+    this.setState ({ CurrentCatalogs: res.data }) 
   }
 
   initTask = async taskId => {
@@ -172,8 +171,8 @@ class Main extends Component {
           <Switch>
             <Route path='/project/:projectId/board/:boardId' render={()=>{
               return (
-                <Catelog board={this.state.currentBoard}
-                  catelogList={this.state.CurrentCatelogs}
+                <Catalog board={this.state.currentBoard}
+                  catalogList={this.state.CurrentCatalogs}
                   setCurrentTask={(taskId) => this.initTask(taskId)}
                   handleTaskChange = {((type, val)=>{this.handleTaskChange(type, val)})}
                   updateTask = {(data=>{this.updateTask(data)})}/>
@@ -183,11 +182,11 @@ class Main extends Component {
         </div>
         <div className="right">
           <Switch>
-            <Route exact path='/project/:projectId/board/:catelogId/task/:taskId' render={()=>{
+            <Route exact path='/project/:projectId/board/:catalogId/task/:taskId' render={()=>{
               return <Deitail project={this.state.currentProject} task={this.state.currentTask} process={this.state.currentProcess}/>
             }}/>
-            <Route exact path='/project/:projectId/board/:catelogId/file' component={File} />
-            <Route exact path='/project/:projectId/board/:catelogId/statistics' component={Statistics} />
+            <Route exact path='/project/:projectId/board/:catalogId/file' component={File} />
+            <Route exact path='/project/:projectId/board/:catalogId/statistics' component={Statistics} />
           </Switch>
         </div>
       </div>

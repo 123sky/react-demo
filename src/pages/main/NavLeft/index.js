@@ -3,7 +3,6 @@ import { Icon, Menu, Dropdown } from "antd";
 import { NavLink } from 'react-router-dom'
 import CreateProject from '../CreateProject'
 import "./index.less";
-import logo from "./logo.svg";
 import axios from "../../../axios";
 
 const SubMenu = Menu.SubMenu;

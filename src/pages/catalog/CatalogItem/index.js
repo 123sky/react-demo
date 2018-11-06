@@ -3,7 +3,7 @@ import { Checkbox, Input, Icon, Avatar, Dropdown, Menu } from 'antd';
 import {withRouter } from 'react-router';
 import './index.less';
 
-class CatelogItem extends Component {
+class CatalogItem extends Component {
 
   detail = () => {
     this.props.history.push(`/project/${this.props.data.pathParams.projectId}/board/${this.props.data.pathParams.boardId}/task/${this.props.data.task.uid}`)
@@ -23,12 +23,12 @@ class CatelogItem extends Component {
     }
   }
 
-  getMenu = (uid) => {
+  getMenu = (task) => {
     return (
       <Menu>
         <Menu.Item key="1">日期</Menu.Item>
         <Menu.Item key="2">优先级</Menu.Item>
-        <Menu.Item key="3" onClick={this.deleteTask} uid={uid}>删除</Menu.Item>
+        <Menu.Item key="3" onClick={this.deleteTask} task={task}>删除</Menu.Item>
       </Menu>
     )
 
@@ -51,19 +51,19 @@ class CatelogItem extends Component {
     this.props.updateTask({[type]: e.target.value, uid: this.props.data.task.uid});
   }
 
-  deleteTask = ({item:{props:{uid}}}) => {
-    console.log(uid)
+  deleteTask = ({item:{props:{task}}}) => {
+    this.props.delTask(task)
   }
 
   render() {
     return (
-      <div className="catelog-item" style={{opacity: this.props.data.task.is_finished === 1?'0.5':'1'}}>
+      <div className="catalog-item" style={{opacity: this.props.data.task.is_finished === 1?'0.5':'1'}}>
         <div className="checkbox">
           <Checkbox onChange={this.handleTaskChange.bind(this, 'is_finished')}
             defaultChecked={this.props.data.task.is_finished === 1}></Checkbox>
         </div>
         <div className="input" onClick={this.detail}>
-          <Dropdown overlay={this.getMenu(this.props.data.task.uid)} trigger={['contextMenu']}>
+          <Dropdown overlay={this.getMenu(this.props.data.task)} trigger={['contextMenu']}>
             <Input defaultValue={this.props.data.task.written_content} 
               onChange={this.handleTaskChange.bind(this, 'written_content')} 
               onBlur={this.updateTask.bind(this, 'written_content')}/>
@@ -73,7 +73,7 @@ class CatelogItem extends Component {
           {this.getAvatar()}
         </div>
         <div className="more">
-          <Dropdown overlay={this.getMenu(this.props.data.task.uid)} trigger={['click']}>
+          <Dropdown overlay={this.getMenu(this.props.data.task)} trigger={['hover']}>
             <Icon type="ellipsis" theme="outlined" />
           </Dropdown>
         </div>
@@ -82,4 +82,4 @@ class CatelogItem extends Component {
   }
 }
 
-export default withRouter(CatelogItem)
+export default withRouter(CatalogItem)

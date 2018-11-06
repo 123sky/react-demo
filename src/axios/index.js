@@ -26,7 +26,6 @@ export default class Axios {
         } */
         let baseApi = 'https://class.h3c.com:8001/chat/';
         let user = sessionStorage.getItem('user')
-        console.log(user)
         if(!user){
             window.location.hash = '#/login'
             return
