@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Route, Switch} from 'react-router-dom'
 import NavLeft from './NavLeft';
 import Catalog from '../catalog'
+import MyTask from '../myTask'
+import Trash from '../trash'
 import Deitail from '../deitail'
 import Statistics from '../statistics'
 import File from '../file'
@@ -21,8 +23,8 @@ class Main extends Component {
 
   componentDidMount () {
     this.getProjectList()
-    this.initTask()
     this.initCatalogs()
+    this.initTask()
   }
 
   /*
@@ -178,12 +180,29 @@ class Main extends Component {
                   updateTask = {(data=>{this.updateTask(data)})}/>
               )
             }}/>
+            <Route path='/myTask/:type' render={()=>{
+              return (
+                <MyTask setCurrentTask={(taskId) => this.initTask(taskId)}
+                  handleTaskChange = {((type, val)=>{this.handleTaskChange(type, val)})}
+                  updateTask = {(data=>{this.updateTask(data)})}/>
+              )
+            }}/>
+            <Route path='/trash' render={()=>{
+              return (
+                <Trash setCurrentTask={(taskId) => this.initTask(taskId)}
+                  handleTaskChange = {((type, val)=>{this.handleTaskChange(type, val)})}
+                  updateTask = {(data=>{this.updateTask(data)})}/>
+              )
+            }}/>
           </Switch>
         </div>
         <div className="right">
           <Switch>
             <Route exact path='/project/:projectId/board/:catalogId/task/:taskId' render={()=>{
               return <Deitail project={this.state.currentProject} task={this.state.currentTask} process={this.state.currentProcess}/>
+            }}/>
+            <Route exact path='/myTask/:type/:taskId' render={()=>{
+              return <Deitail task={this.state.currentTask} process={this.state.currentProcess}/>
             }}/>
             <Route exact path='/project/:projectId/board/:catalogId/file' component={File} />
             <Route exact path='/project/:projectId/board/:catalogId/statistics' component={Statistics} />

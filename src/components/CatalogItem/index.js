@@ -6,8 +6,7 @@ import './index.less';
 class CatalogItem extends Component {
 
   detail = () => {
-    this.props.history.push(`/project/${this.props.data.pathParams.projectId}/board/${this.props.data.pathParams.boardId}/task/${this.props.data.task.uid}`)
-    this.props.setCurrentTask(this.props.data.task.uid)
+    this.props.handleDetail(this.props.data.task.uid)
   }
 
   getAvatar = () => {

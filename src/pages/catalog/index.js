@@ -105,9 +105,6 @@ class Catalog extends Component {
           <CatalogItem
             key={task.uid}
             data={{ task, pathParams: this.props.match.params }}
-            setCurrentTask={taskId => {
-              this.setCurrentTask(taskId);
-            }}
             handleTaskChange={(type, val) => {
               this.handleTaskChange(type, val);
             }}
@@ -116,6 +113,10 @@ class Catalog extends Component {
             }}
             delTask={task => {
               this.delTask(task);
+            }}
+            handleDetail={taskId => {
+              this.props.history.push(`/project/${this.props.match.params.projectId}/board/${this.props.match.params.boardId}/task/${taskId}`)
+              this.setCurrentTask(taskId);
             }}
           />
         );

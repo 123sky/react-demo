@@ -161,21 +161,28 @@ class NavLeft extends Component {
             style={{ width: '100%' }}>
             <Menu.Item
               key="/execute">
-              <NavLink to={{pathname:'/execute'}}>
+              <NavLink to={{pathname:'/myTask/execute'}}>
                 <Icon type="mail" />
                 <span>待完成</span>
               </NavLink>
             </Menu.Item>
             <Menu.Item
+              key="/creater">
+              <NavLink to={{pathname:'/myTask/creater'}}>
+                <Icon type="mail" />
+                <span>我创建的</span>
+              </NavLink>
+            </Menu.Item>
+            <Menu.Item
               key="/today">
-              <NavLink to={{pathname:'/today'}}>
+              <NavLink to={{pathname:'/myTask/today'}}>
                 <Icon type="appstore" />
                 <span>今天</span>
               </NavLink>
             </Menu.Item>
             <Menu.Item
               key="/recent">
-              <NavLink to={{pathname:'/recent'}}>
+              <NavLink to={{pathname:'/myTask/recent'}}>
                 <Icon type="appstore" />
                 <span>最近7天</span>
               </NavLink>
@@ -185,7 +192,7 @@ class NavLeft extends Component {
             <Menu.Divider style={{backgroundColor: 'rgba(0, 0, 0, 0.2)'}}/>
             <Menu.Item
               key="/finish">
-              <NavLink to={{pathname:'/finish'}}>
+              <NavLink to={{pathname:'/myTask/finish'}}>
                 <Icon type="appstore" />
                 <span>已完成</span>
               </NavLink>
