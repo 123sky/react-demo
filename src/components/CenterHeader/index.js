@@ -40,12 +40,20 @@ class CenterHeader extends Component {
         </Menu.Item>
       </Menu>
     );
-    return (
-      <div className="center-header">
-        <h5 className="title">{this.props.board.name}</h5>
-        <div className="tools">
+    let FileAndStatistics = null
+    if(this.props.board) {
+      FileAndStatistics = (
+        <span>
           <Icon type="folder-open" theme="outlined" onClick={this.showFile}/>
           <Icon type="bar-chart" theme="outlined" onClick={this.showStatistics}/>
+        </span>
+      )
+    }
+    return (
+      <div className="center-header">
+        <h5 className="title">{this.props.board ? this.props.board.name : this.props.title}</h5>
+        <div className="tools">
+          {FileAndStatistics}
           <Dropdown overlay={sortMenu} trigger={['click']}>
             <Icon type="clock-circle" theme="outlined" />
           </Dropdown>

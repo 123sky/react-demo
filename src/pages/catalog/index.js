@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { Collapse, Input, Form } from "antd";
-import CenterHeader from "./CenterHeader";
-import CatalogItem from "./CatalogItem";
+import CenterHeader from "../../components/CenterHeader";
+import CatalogItem from "../../components/CatalogItem";
 import axios from "../../axios";
 import "./index.less";
 
@@ -16,10 +16,6 @@ class Catalog extends Component {
 
   handleTaskChange = (type, val) => {
     this.props.handleTaskChange(type, val);
-  };
-
-  updateTask = data => {
-    this.props.updateTask(data);
   };
 
   createCatalog = e => {
@@ -40,6 +36,10 @@ class Catalog extends Component {
         this.props.form.resetFields();
         this.setState({ catalogList });
       });
+  };
+
+  updateTask = data => {
+    this.props.updateTask(data);
   };
 
   delTask = task => {
@@ -91,7 +91,7 @@ class Catalog extends Component {
         this.props.form.resetFields();
         this.setState({ catalogList });
       });
-  }
+  };
 
   renderCatalog = () => {
     const { getFieldDecorator } = this.props.form;

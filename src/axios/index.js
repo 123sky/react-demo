@@ -26,11 +26,12 @@ export default class Axios {
         } */
         let baseApi = 'https://class.h3c.com:8001/chat/';
         let user = sessionStorage.getItem('user')
-        if(!user){
-            window.location.hash = '#/login'
-            return
-        }
+
         return new Promise((resolve, reject) => {
+            if (!user) {
+                window.location.hash = '#/login'
+                reject();
+            }
             let config = {
                 headers: {
                     Authorization: 'Token ' + JSON.parse(user).openid
@@ -44,10 +45,6 @@ export default class Axios {
             }
             config = Object.assign(config, options)
             axios(config).then((response) => {
-                /* if (options.data && options.data.isShowLoading !== false) {
-                    loading = document.getElementById('ajaxLoading');
-                    loading.style.display = 'none';
-                } */
                 if (response.status === 200) {
                     let res = response.data;
                     if (res.code === 0) {
@@ -57,6 +54,7 @@ export default class Axios {
                             title: "提示",
                             content: res.msg
                         })
+                        reject(res.msg);
                     }
                 } else {
                     reject(response.data);

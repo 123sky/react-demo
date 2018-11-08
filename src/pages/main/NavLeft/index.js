@@ -15,7 +15,7 @@ class NavLeft extends Component {
     selectedKeys: [],
     projectListDom: null,
     visible: false,
-    user: JSON.parse(sessionStorage.getItem('user'))
+    user: JSON.parse(sessionStorage.getItem('user')) || {}
   };
 
   async componentDidMount() {
@@ -160,10 +160,10 @@ class NavLeft extends Component {
             onSelect={this.onSelect}
             style={{ width: '100%' }}>
             <Menu.Item
-              key="/all">
-              <NavLink to={{pathname:'/all'}}>
+              key="/execute">
+              <NavLink to={{pathname:'/execute'}}>
                 <Icon type="mail" />
-                <span>所有任务</span>
+                <span>待完成</span>
               </NavLink>
             </Menu.Item>
             <Menu.Item
