@@ -5,7 +5,8 @@ import './index.less';
 
 class CatalogItem extends Component {
 
-  detail = () => {
+  detail = (e) => {
+    e.stopPropagation()
     this.props.handleDetail(this.props.data.task.uid)
   }
 
@@ -72,7 +73,7 @@ class CatalogItem extends Component {
           {this.getAvatar()}
         </div>
         <div className="more">
-          <Dropdown overlay={this.getMenu(this.props.data.task)} trigger={['hover']}>
+          <Dropdown overlay={this.getMenu(this.props.data.task)} trigger={['click']}>
             <Icon type="ellipsis" theme="outlined" />
           </Dropdown>
         </div>

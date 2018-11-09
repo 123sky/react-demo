@@ -2,6 +2,11 @@
 .catalog {
   height: 100%;
   position: relative;
+  .catalog-more {
+    display: none;
+    float: right;
+    margin-right: 20px;
+  }
   .collapse-wrap {
     height: calc(100vh - 68px);
     overflow-y: overlay;
@@ -15,6 +20,11 @@
   .ant-collapse-header {
     background: #fdfdfd;
     font-weight: 700;
+    &:hover {
+      .catalog-more {
+        display: initial;
+      }
+    }
   }
 
   .create-catalog-wrap {

@@ -38,7 +38,7 @@ class Login extends Component {
                 clearInterval(timer);
                 sessionStorage.setItem('user', JSON.stringify(res.data.data))
                 console.log("登陆成功");
-                this.props.history.push(`/task`)
+                this.props.history.push(`/myTask/execute`)
               }
             });
         }, 1000);

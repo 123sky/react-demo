@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
-import { Collapse, Input, Form } from "antd";
+import { Collapse, Input, Form, Icon, Dropdown, Menu } from "antd";
 import CenterHeader from "../../components/CenterHeader";
 import CatalogItem from "../../components/CatalogItem";
 import axios from "../../axios";
@@ -91,15 +91,20 @@ class Catalog extends Component {
         this.props.form.resetFields();
         this.setState({ catalogList });
       });
-  };
+  }
+
+  stopPropagation = (e) => {
+    console.log(e)
+    e.stopPropagation()
+  }
 
   renderCatalog = () => {
     const { getFieldDecorator } = this.props.form;
     return this.props.catalogList.map((catalog, index) => {
       let task = catalog.task_list.map(task => {
         // TODO 后台是否应该直接返回status为1的数据
-        if(task.status === 0){
-          return ''
+        if (task.status === 0) {
+          return "";
         }
         return (
           <CatalogItem
@@ -115,14 +120,40 @@ class Catalog extends Component {
               this.delTask(task);
             }}
             handleDetail={taskId => {
-              this.props.history.push(`/project/${this.props.match.params.projectId}/board/${this.props.match.params.boardId}/task/${taskId}`)
+              this.props.history.push(
+                `/project/${this.props.match.params.projectId}/board/${
+                  this.props.match.params.boardId
+                }/task/${taskId}`
+              );
               this.setCurrentTask(taskId);
             }}
           />
         );
       });
       return (
-        <Panel header={catalog.name} key={index + ""}>
+        <Panel
+          key={index + ""}
+          header={
+            <div>
+              <span>{catalog.name}</span>
+              <div className="catalog-more" onClick={this.stopPropagation}>
+                <Dropdown
+                  trigger={["click"]}
+                  overlay={
+                    <Menu>
+                      <Menu.Item key="1">修改</Menu.Item>
+                      <Menu.Item key="2" onClick={this.deleteTask} task={task}>
+                        删除
+                      </Menu.Item>
+                    </Menu>
+                  }
+                >
+                  <Icon type="ellipsis" theme="outlined" />
+                </Dropdown>
+              </div>
+            </div>
+          }
+        >
           <Form className="create-wrap">
             <FormItem>
               {getFieldDecorator("taskContent", {})(

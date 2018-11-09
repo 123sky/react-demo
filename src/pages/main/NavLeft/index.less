@@ -54,9 +54,15 @@
     padding-top: 66px;
     box-sizing: border-box;
     overflow-y: overlay;
+    .ant-menu-submenu-title:hover,
     .ant-menu-item:hover {
       .operation {
         display: initial;
+      }
+    }
+    .ant-menu-submenu-title:hover {
+      .ant-menu-submenu-arrow {
+        display: none;
       }
     }
     .operation {

@@ -5,50 +5,59 @@ import CatalogItem from "../../components/CatalogItem";
 import axios from "../../axios";
 import "./index.less";
 
-const userId = JSON.parse(sessionStorage.getItem("user")).uid;
-const typeObject = {
-  execute: {
-    name: "待完成",
-    url: `task/list/?executor_id=${userId}`
-  },
-  creater: {
-    name: "我创建的",
-    url: `task/list/?user_id=${userId}`
-  },
-  today: {
-    name: "今天",
-    url: `task/list/?executor_id=${userId}`
-  },
-  recent: {
-    name: "最近7天",
-    url: `task/list/?executor_id=${userId}`
-  },
-  finish: {
-    name: "已完成",
-    url: `task/list/?executor_id=${userId}`
-  }
-};
-
 class MyTask extends Component {
   state = {
-    taskList: []
+    taskList: [],
+    type: null,
+    typeObject: {}
   };
 
-  componentDidMount () {
-    this.getMyTask(this.props);
+  com;
+
+  componentDidMount() {
+    if (this.props.match.params.type !== this.state.type) {
+      this.setState({ type: this.props.match.params.type });
+      this.getMyTask(this.props);
+    }
   }
 
   componentWillReceiveProps(props) {
-    this.getMyTask(props);
+    if (props.match.params.type !== this.state.type) {
+      this.setState({ type: props.match.params.type });
+      this.getMyTask(props);
+    }
   }
 
-  getMyTask = async (props) => {
-    let params = {
-      url: typeObject[props.match.params.type].url
+  getMyTask = props => {
+    if (!JSON.parse(sessionStorage.getItem("user"))) {
+      return 
+    }
+    let userId = JSON.parse(sessionStorage.getItem("user")).uid;
+    let typeObject = {
+      execute: {
+        name: "待完成",
+        url: `task/list/?executor_id=${userId}`
+      },
+      creater: {
+        name: "我创建的",
+        url: `task/list/?user_id=${userId}`
+      },
+      today: {
+        name: "今天",
+        url: `task/list/?executor_id=${userId}`
+      },
+      recent: {
+        name: "最近7天",
+        url: `task/list/?executor_id=${userId}`
+      },
+      finish: {
+        name: "已完成",
+        url: `task/list/?executor_id=${userId}`
+      }
     };
-    let res = await axios.ajax(params);
-    this.setState({
-      taskList: res.data
+    this.setState({ typeObject }, async () => {
+      let res = await axios.ajax({ url: this.state.typeObject[props.match.params.type].url });
+      this.setState({ taskList: res.data });
     });
   };
 
@@ -109,7 +118,9 @@ class MyTask extends Component {
             this.delTask(task);
           }}
           handleDetail={taskId => {
-            this.props.history.push(`/myTask/${this.props.match.params.type}/${taskId}`);
+            this.props.history.push(
+              `/myTask/${this.props.match.params.type}/${taskId}`
+            );
             this.setCurrentTask(taskId);
           }}
         />
@@ -121,7 +132,14 @@ class MyTask extends Component {
   render() {
     return (
       <div className="execute">
-        <CenterHeader title={typeObject[this.props.match.params.type].name} /> {this.renderTaskList()}{" "}
+        <CenterHeader
+          title={
+            this.state.typeObject[this.props.match.params.type]
+              ? this.state.typeObject[this.props.match.params.type].name
+              : ""
+          }
+        />{" "}
+        {this.renderTaskList()}{" "}
       </div>
     );
   }
