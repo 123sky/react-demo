@@ -14,7 +14,11 @@ class NavLeft extends Component {
     openKeys: [],
     selectedKeys: [],
     projectListDom: null,
-    visible: false,
+    dialog: {
+      visible: false,
+      title: "",
+      type: null
+    },
     user: JSON.parse(sessionStorage.getItem("user")) || {}
   };
 
@@ -45,7 +49,13 @@ class NavLeft extends Component {
       key => this.state.openKeys.indexOf(key) === -1
     );
     if (latestOpenKey === "create") {
-      this.setState({ visible: true });
+      this.setState({
+        dialog: {
+          visible: true,
+          title: "新建项目",
+          type: "createProject"
+        }
+      });
       return;
     }
     this.setState({
@@ -61,7 +71,20 @@ class NavLeft extends Component {
     this.formRef = formRef;
   };
 
-  handleSubmit = () => {
+  handleDialogSubmit = (type, uid) => {
+    switch (type) {
+      case "createProject":
+        this.handleCreateProject();
+        break;
+      case "createBoard":
+        this.handleCreateBoard(uid);
+        break;
+      default:
+        return;
+    }
+  };
+
+  handleCreateProject = () => {
     const form = this.formRef.props.form;
     form.validateFields((err, values) => {
       if (err) {
@@ -74,19 +97,124 @@ class NavLeft extends Component {
           data: values
         })
         .then(res => {
+          this.props.getProjectList();
           form.resetFields();
-          this.setState({ visible: false });
+          this.setState({
+            dialog: {
+              visible: false,
+              title: "",
+              type: "null"
+            }
+          });
         });
     });
   };
 
-  handleCancel = () => {
-    this.setState({ visible: false });
+  handleCreateBoard = (projectId) => {
+    const form = this.formRef.props.form;
+    form.validateFields((err, values) => {
+      if (err) {
+        return;
+      }
+      values['project_id'] = projectId
+      console.log(values)
+      axios
+        .ajax({
+          method: "Post",
+          url: "board/",
+          data: values
+        })
+        .then(res => {
+          this.props.getProjectList();
+          form.resetFields();
+          this.setState({
+            dialog: {
+              visible: false,
+              title: "",
+              type: "null"
+            }
+          });
+        });
+    });
+  }
+
+  handleCreateBoardSubmit = ({
+    item: {
+      props: {
+        project: { uid }
+      }
+    }
+  }) => {
+    this.setState({
+      dialog: {
+        visible: true,
+        title: "新建看板",
+        type: "createBoard",
+        uid: uid
+      }
+    });
   };
 
-  renderMenu = projectList => {
-    let projectListDom = [];
-    const operationMenu = (
+  handleUpdateProject = ({
+    item: {
+      props: { project }
+    }
+  }) => {
+    console.log(project);
+  };
+
+  handleDeleteProject = ({
+    item: {
+      props: {
+        project: { uid }
+      }
+    }
+  }) => {
+    axios
+      .ajax({
+        method: "DELETE",
+        url: `project/${uid}/`
+      })
+      .then(res => {
+        this.props.getProjectList();
+      });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      dialog: {
+        visible: false,
+        title: "",
+        type: "null"
+      }
+    });
+  };
+
+  getProjectMenu = project => {
+    return (
+      <Menu>
+        <Menu.Item
+          key="0"
+          onClick={this.handleCreateBoardSubmit}
+          project={project}
+        >
+          <Icon type="form" />
+          <span>新建看板</span>
+        </Menu.Item>
+        <Menu.Item key="1" onClick={this.handleUpdateProject} project={project}>
+          <Icon type="form" />
+          <span>修 改</span>
+        </Menu.Item>
+        <Menu.Item key="2" onClick={this.handleDeleteProject} project={project}>
+          <Icon type="delete" />
+          <span>删 除</span>
+        </Menu.Item>
+      </Menu>
+    );
+  };
+
+  getBoardMenu = borad => {
+    return (
       <Menu>
         <Menu.Item key="1">
           <Icon type="form" theme="outlined" />
@@ -98,6 +226,10 @@ class NavLeft extends Component {
         </Menu.Item>
       </Menu>
     );
+  };
+
+  renderMenu = projectList => {
+    let projectListDom = [];
     projectList.forEach(project => {
       let boardListDom = [];
       project.board.forEach(board => {
@@ -109,7 +241,7 @@ class NavLeft extends Component {
               {board.name}
             </NavLink>
             <div className="operation" onClick={this.handleOperationClick}>
-              <Dropdown overlay={operationMenu} trigger={["click"]}>
+              <Dropdown overlay={this.getBoardMenu(board)} trigger={["click"]}>
                 <Icon type="ellipsis" theme="outlined" />
               </Dropdown>
             </div>
@@ -125,7 +257,10 @@ class NavLeft extends Component {
               <Icon type="setting" />
               <span>{project.name}</span>
               <span className="operation" onClick={this.handleOperationClick}>
-                <Dropdown overlay={operationMenu} trigger={["click"]}>
+                <Dropdown
+                  overlay={this.getProjectMenu(project)}
+                  trigger={["click"]}
+                >
                   <Icon type="ellipsis" theme="outlined" />
                 </Dropdown>
               </span>
@@ -218,10 +353,10 @@ class NavLeft extends Component {
           </Menu>
         </div>
         <CreateProject
+          options={this.state.dialog}
           wrappedComponentRef={this.saveFormRef}
-          visible={this.state.visible}
           onCancel={this.handleCancel}
-          onOk={this.handleSubmit}
+          onOk={this.handleDialogSubmit}
         />
       </div>
     );

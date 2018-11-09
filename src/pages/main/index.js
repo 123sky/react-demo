@@ -32,6 +32,7 @@ class Main extends Component {
    ---------------------------------------------------------------------------------- */
 
   getProjectList = async () => {
+    console.log(22222222222222)
     let projectList = await axios.ajax({ url:'project/list/' })
     let boardAjaxList = []
     projectList.data.forEach(project => {
@@ -167,7 +168,8 @@ class Main extends Component {
       <div className="main">
         <div className="left">
           <NavLeft projectList={this.state.projectList} 
-            initCurrentBoard={(projectId, boradId) => this.initCurrentBoard(projectId, boradId)}></NavLeft>
+            initCurrentBoard={(projectId, boradId) => this.initCurrentBoard(projectId, boradId)}
+            getProjectList={()=>this.getProjectList()}></NavLeft>
         </div>
         <div className="center">
           <Switch>

@@ -9,14 +9,19 @@ class CreateProject extends Component {
   };
 
   render() {
-    const { visible, onCancel, onOk, form } = this.props;
+    const {
+      options: { visible, title, type, uid },
+      onCancel,
+      onOk,
+      form
+    } = this.props;
     const { getFieldDecorator } = form;
     return (
       <Modal
-        title="新建项目"
+        title={title}
         key="create"
         visible={visible}
-        onOk={onOk}
+        onOk={onOk.bind(this, type, uid)}
         confirmLoading={this.state.confirmLoading}
         onCancel={onCancel}
       >
