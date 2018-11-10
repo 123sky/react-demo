@@ -1,6 +1,13 @@
 .center-header {
-  padding: 12px 20px;
+  padding: 12px 15px;
   display: flex;
+  .show-left {
+    font-size: 22px;
+    color: #a3a3a3;
+    margin-right: 20px;
+    display: none;
+    cursor: pointer;
+  }
   .title {
     flex: 1;
     font-size: 22px;
@@ -12,5 +19,23 @@
       margin: 0 5px;
       cursor: pointer;
     }
+  }
+}
+
+@media only screen and (min-width: 921px) and (max-width:1020px) {
+  .center-header .show-left {
+    display: initial
+  }
+}
+
+@media only screen and (min-width: 461px) and (max-width:920px) {
+  .center-header .show-left {
+    display: initial
+  }
+}
+
+@media only screen and (max-width: 460px) {
+  .center-header .show-left {
+    display: initial
   }
 }

@@ -8,6 +8,7 @@ import Deitail from '../deitail'
 import Statistics from '../statistics'
 import File from '../file'
 import axios from '../../axios';
+import eventProxy from '../../utils/eventProxy'
 import './index.less';
 
 class Main extends Component {
@@ -18,10 +19,21 @@ class Main extends Component {
     currentBoard: {},
     CurrentCatalogs: [],
     currentTask: {},
-    currentProcess: []
+    currentProcess: [],
+    navLeftDom : React.createRef(),
+    navLeftStyle : {}
   }
 
   componentDidMount () {
+    
+    eventProxy.on('SHOWNAVLEFT', () => {
+      if(this.state.navLeftDom.current.getBoundingClientRect().left < 200){
+        this.setState({navLeftStyle: {left: '0'}})
+      } else {
+        this.setState({navLeftStyle: {left: '-260px'}})
+      }
+    })
+
     this.getProjectList()
     this.initCatalogs()
     this.initTask()
@@ -165,7 +177,7 @@ class Main extends Component {
   render() {
     return (
       <div className="main">
-        <div className="left">
+        <div className="left" ref={this.state.navLeftDom} style={this.state.navLeftStyle}>
           <NavLeft projectList={this.state.projectList} 
             initCurrentBoard={(projectId, boradId) => this.initCurrentBoard(projectId, boradId)}
             getProjectList={()=>this.getProjectList()}></NavLeft>

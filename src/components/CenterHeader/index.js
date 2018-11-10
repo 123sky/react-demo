@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Menu, Dropdown, Icon } from 'antd';
 import {withRouter } from 'react-router';
+import eventProxy from '../../utils/eventProxy'
 import './index.less';
 
 class CenterHeader extends Component {
@@ -11,6 +12,10 @@ class CenterHeader extends Component {
 
   showStatistics = () => {
     this.props.history.push(`/project/${this.props.match.params.projectId}/board/${this.props.match.params.boardId}/statistics`)
+  }
+
+  showLeft = () => {
+    eventProxy.trigger('SHOWNAVLEFT')
   }
   
   render() {
@@ -51,6 +56,7 @@ class CenterHeader extends Component {
     }
     return (
       <div className="center-header">
+        <span className="show-left" onClick={this.showLeft}><Icon type="bars" /></span>
         <h5 className="title">{this.props.board ? this.props.board.name : this.props.title}</h5>
         <div className="tools">
           {FileAndStatistics}

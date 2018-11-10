@@ -9,11 +9,18 @@ class Header extends Component {
     user: JSON.parse(sessionStorage.getItem("user")) || {}
   }
 
+  toMini = () => {
+    window.open(window.location.origin + '/#/myTask/execute', '恰当协同', "height=700, width=400, top=20, left=20 , toolbar =no, menubar=no, scrollbars=no, resizeable=no, location=no, status=no")
+  }
+
   getMenu = () => {
     return (
       <Menu>
         <Menu.Item>
           同步
+        </Menu.Item>
+        <Menu.Item onClick={this.toMini}>
+          精简模式
         </Menu.Item>
         <Menu.Item>
           设置
