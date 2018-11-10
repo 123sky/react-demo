@@ -10,7 +10,7 @@ class CreateProject extends Component {
 
   render() {
     const {
-      options: { visible, title, type, uid },
+      options: { visible, title, type, uid, name },
       onCancel,
       onOk,
       form
@@ -28,6 +28,7 @@ class CreateProject extends Component {
         <Form>
           <FormItem labelCol={{ span: 0 }} wrapperCol={{ span: 24 }}>
             {getFieldDecorator("name", {
+              initialValue: name ,
               rules: [{ required: true, message: "请输入项目名称" }]
             })(<Input placeholder="请填写项目名称" />)}
           </FormItem>

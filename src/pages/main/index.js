@@ -176,6 +176,7 @@ class Main extends Component {
               return (
                 <Catalog board={this.state.currentBoard}
                   catalogList={this.state.CurrentCatalogs}
+                  getCatalog={()=>{this.initCatalogs()}}
                   setCurrentTask={(taskId) => this.initTask(taskId)}
                   handleTaskChange = {((type, val)=>{this.handleTaskChange(type, val)})}
                   updateTask = {(data=>{this.updateTask(data)})}/>

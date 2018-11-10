@@ -3,6 +3,7 @@ import { withRouter } from "react-router";
 import { Collapse, Input, Form, Icon, Dropdown, Menu } from "antd";
 import CenterHeader from "../../components/CenterHeader";
 import CatalogItem from "../../components/CatalogItem";
+import CreateProject from "../../components/CreateProject";
 import axios from "../../axios";
 import "./index.less";
 
@@ -10,6 +11,98 @@ const Panel = Collapse.Panel;
 const FormItem = Form.Item;
 
 class Catalog extends Component {
+
+  state = {
+    dialog: {
+      visible: false,
+      title: "",
+      type: null
+    }
+  }
+
+  stopPropagation = (e) => {
+    e.stopPropagation()
+  }
+
+  /*
+   * 清单 ------------------------------------------------------
+   */
+
+  saveFormRef = formRef => {
+    this.formRef = formRef;
+  };
+
+  handleDialogSubmit = (type, uid) => {
+    const form = this.formRef.props.form;
+    form.validateFields((err, values) => {
+      if (err) {
+        return;
+      }
+      console.log(values)
+      axios
+        .ajax({
+          method: "PUT",
+          url: `catalog/${uid}/`,
+          data: values
+        })
+        .then(res => {
+          this.props.getCatalog();
+          form.resetFields();
+          this.setState({
+            dialog: {
+              visible: false,
+              title: "",
+              name: ""
+            }
+          });
+        });
+    });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      dialog: {
+        visible: false,
+        title: "",
+        type: "null"
+      }
+    });
+  };
+
+  beforeEditCatelog = (element) => {
+    console.log(element)
+    let {
+      item: {
+        props: {
+          catalog: { name, uid }
+        }
+      }
+    } = element;
+    this.setState({
+      dialog: {
+        visible: true,
+        title: "编辑清单",
+        uid,
+        name
+      }
+    });
+  }
+
+  handleDeleteCatelog = (element) => {
+    axios
+      .ajax({
+        method: "DELETE",
+        url: `catalog/${element.item.props.catalog.uid}/`
+      })
+      .then(res => {
+        this.props.getCatalog();
+      });
+  }
+
+  /*
+   * 任务 -------------------------------------------------------
+   */
+
   setCurrentTask = taskId => {
     this.props.setCurrentTask(taskId);
   };
@@ -93,10 +186,9 @@ class Catalog extends Component {
       });
   }
 
-  stopPropagation = (e) => {
-    console.log(e)
-    e.stopPropagation()
-  }
+  /*
+   * 清单、任务渲染 --------------------------------------------------------
+   */
 
   renderCatalog = () => {
     const { getFieldDecorator } = this.props.form;
@@ -141,10 +233,8 @@ class Catalog extends Component {
                   trigger={["click"]}
                   overlay={
                     <Menu>
-                      <Menu.Item key="1">修改</Menu.Item>
-                      <Menu.Item key="2" onClick={this.deleteTask} task={task}>
-                        删除
-                      </Menu.Item>
+                      <Menu.Item key="1" onClick={this.beforeEditCatelog} catalog={catalog}>修改</Menu.Item>
+                      <Menu.Item key="2" onClick={this.handleDeleteCatelog}  catalog={catalog}>删除</Menu.Item>
                     </Menu>
                   }
                 >
@@ -188,6 +278,12 @@ class Catalog extends Component {
         <div className="collapse-wrap">
           <Collapse defaultActiveKey={["0"]}>{this.renderCatalog()}</Collapse>
         </div>
+        <CreateProject
+          options={this.state.dialog}
+          wrappedComponentRef={this.saveFormRef}
+          onCancel={this.handleCancel}
+          onOk={this.handleDialogSubmit}
+        />
       </div>
     );
   }
