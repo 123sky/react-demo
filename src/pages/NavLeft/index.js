@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Icon, Menu, Dropdown } from "antd";
 import { NavLink } from "react-router-dom";
+import Header from "./Header";
 import CreateProject from "./CreateProject";
 import "./index.less";
 import axios from "../../axios";
@@ -18,8 +19,7 @@ class NavLeft extends Component {
       visible: false,
       title: "",
       type: null
-    },
-    user: JSON.parse(sessionStorage.getItem("user")) || {}
+    }
   };
 
   async componentDidMount() {
@@ -35,12 +35,18 @@ class NavLeft extends Component {
     let pathNames = pathName.split("/");
     let selectedKeys = pathNames[1] === "project" ? [pathNames[4]] : [pathName];
     let openKeys = [pathName.split("/")[2]] || [];
-    this.setState({ selectedKeys });
-    this.setState({ openKeys });
+    this.setState({
+      selectedKeys
+    });
+    this.setState({
+      openKeys
+    });
   };
 
   onSelect = ({ item, key, selectedKeys }) => {
-    this.setState({ selectedKeys: [key] });
+    this.setState({
+      selectedKeys: [key]
+    });
     this.props.initCurrentBoard(item.props.project, item.props.board);
   };
 
@@ -110,14 +116,14 @@ class NavLeft extends Component {
     });
   };
 
-  handleCreateBoard = (projectId) => {
+  handleCreateBoard = projectId => {
     const form = this.formRef.props.form;
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
-      values['project_id'] = projectId
-      console.log(values)
+      values["project_id"] = projectId;
+      console.log(values);
       axios
         .ajax({
           method: "Post",
@@ -136,44 +142,28 @@ class NavLeft extends Component {
           });
         });
     });
-  }
+  };
 
-  handleCreateBoardSubmit = ({
-    item: {
-      props: {
-        project: { uid }
-      }
-    }
-  }) => {
+  handleCreateBoardSubmit = element => {
     this.setState({
       dialog: {
         visible: true,
         title: "新建看板",
         type: "createBoard",
-        uid: uid
+        uid: element.item.props.project.uid
       }
     });
   };
 
-  handleUpdateProject = ({
-    item: {
-      props: { project }
-    }
-  }) => {
-    console.log(project);
+  handleUpdateProject = element => {
+    console.log(element);
   };
 
-  handleDeleteProject = ({
-    item: {
-      props: {
-        project: { uid }
-      }
-    }
-  }) => {
+  handleDeleteProject = element => {
     axios
       .ajax({
         method: "DELETE",
-        url: `project/${uid}/`
+        url: `project/${element.item.props.project.uid}/`
       })
       .then(res => {
         this.props.getProjectList();
@@ -199,15 +189,15 @@ class NavLeft extends Component {
           project={project}
         >
           <Icon type="form" />
-          <span>新建看板</span>
+          <span> 新建看板 </span>
         </Menu.Item>
         <Menu.Item key="1" onClick={this.handleUpdateProject} project={project}>
           <Icon type="form" />
-          <span>修 改</span>
+          <span> 修 改 </span>
         </Menu.Item>
         <Menu.Item key="2" onClick={this.handleDeleteProject} project={project}>
           <Icon type="delete" />
-          <span>删 除</span>
+          <span> 删 除 </span>
         </Menu.Item>
       </Menu>
     );
@@ -218,11 +208,11 @@ class NavLeft extends Component {
       <Menu>
         <Menu.Item key="1">
           <Icon type="form" theme="outlined" />
-          <span>修 改</span>
+          <span> 修 改 </span>
         </Menu.Item>
         <Menu.Item key="2">
           <Icon type="delete" theme="outlined" />
-          <span>删 除</span>
+          <span> 删 除 </span>
         </Menu.Item>
       </Menu>
     );
@@ -236,7 +226,9 @@ class NavLeft extends Component {
         boardListDom.push(
           <Menu.Item key={board.uid} board={board.uid} project={project.uid}>
             <NavLink
-              to={{ pathname: `/project/${project.uid}/board/${board.uid}` }}
+              to={{
+                pathname: `/project/${project.uid}/board/${board.uid}`
+              }}
             >
               {board.name}
             </NavLink>
@@ -255,7 +247,7 @@ class NavLeft extends Component {
           title={
             <span>
               <Icon type="setting" />
-              <span>{project.name}</span>
+              <span> {project.name} </span>
               <span className="operation" onClick={this.handleOperationClick}>
                 <Dropdown
                   overlay={this.getProjectMenu(project)}
@@ -280,27 +272,20 @@ class NavLeft extends Component {
         title={
           <span>
             <Icon type="plus-circle" theme="outlined" />
-            <span>新建项目</span>
+            <span> 新建项目 </span>
           </span>
         }
       />
     );
-    this.setState({ projectListDom });
+    this.setState({
+      projectListDom
+    });
   };
 
   render() {
     return (
       <div className="nav-left">
-        <div className="header">
-          <div className="user">
-            <img className="avatar" src={this.state.user.avatar} alt="头像" />
-            <p className="user-name">{this.state.user.name}</p>
-          </div>
-          <div className="tools">
-            <Icon type="bell" theme="outlined" />
-            <Icon type="search" theme="outlined" />
-          </div>
-        </div>
+        <Header />
         <div className="menu-wrap">
           <Menu
             mode="inline"
@@ -309,45 +294,95 @@ class NavLeft extends Component {
             onOpenChange={this.onOpenChange}
             selectedKeys={this.state.selectedKeys}
             onSelect={this.onSelect}
-            style={{ width: "100%" }}
+            style={{
+              width: "100%"
+            }}
           >
             <Menu.Item key="/myTask/execute">
-              <NavLink to={{ pathname: "/myTask/execute" }}>
+              <NavLink
+                to={{
+                  pathname: "/myTask/execute"
+                }}
+              >
                 <Icon type="mail" />
-                <span>待完成</span>
+                <span> 待完成 </span>
               </NavLink>
             </Menu.Item>
             <Menu.Item key="/myTask/creater">
-              <NavLink to={{ pathname: "/myTask/creater" }}>
+              <NavLink
+                to={{
+                  pathname: "/myTask/creater"
+                }}
+              >
                 <Icon type="mail" />
-                <span>我创建的</span>
+                <span> 我创建的 </span>
               </NavLink>
             </Menu.Item>
             <Menu.Item key="/myTask/today">
-              <NavLink to={{ pathname: "/myTask/today" }}>
+              <NavLink
+                to={{
+                  pathname: "/myTask/today"
+                }}
+              >
                 <Icon type="appstore" />
-                <span>今天</span>
+                <span> 今天 </span>
               </NavLink>
             </Menu.Item>
             <Menu.Item key="/myTask/recent">
-              <NavLink to={{ pathname: "/myTask/recent" }}>
+              <NavLink
+                to={{
+                  pathname: "/myTask/recent"
+                }}
+              >
                 <Icon type="appstore" />
-                <span>最近7天</span>
+                <span> 最近7天 </span>
               </NavLink>
             </Menu.Item>
+          </Menu>
+          <Menu
+            mode="inline"
+            theme="dark"
+            openKeys={this.state.openKeys}
+            onOpenChange={this.onOpenChange}
+            selectedKeys={this.state.selectedKeys}
+            onSelect={this.onSelect}
+            style={{
+              width: "100%"
+            }}
+          >
             <Menu.Divider style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }} />
             {this.state.projectListDom}
             <Menu.Divider style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }} />
+          </Menu>
+          <Menu
+            mode="inline"
+            theme="dark"
+            openKeys={this.state.openKeys}
+            onOpenChange={this.onOpenChange}
+            selectedKeys={this.state.selectedKeys}
+            onSelect={this.onSelect}
+            style={{
+              width: "100%"
+            }}
+          >
             <Menu.Item key="/myTask/finish">
-              <NavLink to={{ pathname: "/myTask/finish" }}>
+              <NavLink
+                to={{
+                  pathname: "/myTask/finish"
+                }}
+              >
                 <Icon type="appstore" />
-                <span>已完成</span>
+                <span> 已完成 </span>
               </NavLink>
             </Menu.Item>
             <Menu.Item key="/trash">
-              <NavLink to={{ pathname: "/trash" }}>
+              <NavLink
+                to={{
+                  pathname: "/trash"
+                }}
+              >
                 <Icon type="appstore" />
-                <span>垃圾桶</span>
+                <span> 垃圾桶 </span>
               </NavLink>
             </Menu.Item>
           </Menu>
