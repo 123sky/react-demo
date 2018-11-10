@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Switch} from 'react-router-dom'
-import NavLeft from './NavLeft';
+import NavLeft from '../NavLeft';
 import Catalog from '../catalog'
 import MyTask from '../myTask'
 import Trash from '../trash'
@@ -32,7 +32,6 @@ class Main extends Component {
    ---------------------------------------------------------------------------------- */
 
   getProjectList = async () => {
-    console.log(22222222222222)
     let projectList = await axios.ajax({ url:'project/list/' })
     let boardAjaxList = []
     projectList.data.forEach(project => {
