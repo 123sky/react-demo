@@ -29,14 +29,18 @@ class Main extends Component {
     eventProxy.on('SHOWNAVLEFT', () => {
       if(this.state.navLeftDom.current.getBoundingClientRect().left < 200){
         this.setState({navLeftStyle: {left: '0'}})
-      } else {
-        this.setState({navLeftStyle: {left: '-260px'}})
       }
     })
 
     this.getProjectList()
     this.initCatalogs()
     this.initTask()
+  }
+
+  handleMainClick = (e) => {
+    /* if(navLeftStyle.left && ){
+
+    } */
   }
 
   /*
@@ -174,14 +178,21 @@ class Main extends Component {
     })
   }
 
+  closeLeft = () => {
+    this.setState({navLeftStyle: {}})
+  }
+
   render() {
     return (
-      <div className="main">
+      <div className="main" onClick={this.handleMainClick}>
         <div className="left" ref={this.state.navLeftDom} style={this.state.navLeftStyle}>
           <NavLeft projectList={this.state.projectList} 
             initCurrentBoard={(projectId, boradId) => this.initCurrentBoard(projectId, boradId)}
-            getProjectList={()=>this.getProjectList()}></NavLeft>
+            getProjectList={()=>this.getProjectList()}
+            closeLeft={()=>{this.closeLeft()}}></NavLeft>
         </div>
+        <div className= {this.state.navLeftStyle.left === '0' ? "drawer-bg show" : "drawer-bg"}
+          onClick={this.closeLeft}></div>
         <div className="center">
           <Switch>
             <Route path='/project/:projectId/board/:boardId' render={()=>{

@@ -38,6 +38,7 @@ class NavLeft extends Component {
       selectedKeys: [key]
     });
     this.props.initCurrentBoard(item.props.project, item.props.board);
+    this.props.closeLeft()
   };
 
   onOpenChange = openKeys => {

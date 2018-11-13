@@ -12,6 +12,7 @@
   height: 100%;
   background-color: @blue;
   transition: all .3s ease;
+  z-index: 1000;
 }
 .center {
   position: absolute;
@@ -30,9 +31,22 @@
   border-left: 1px solid #ededed;
 }
 
+.drawer-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(80, 105, 196, 0.2);
+  z-index: 999;
+  display: none;
+  &.show {
+    display: initial;
+  }
+}
+
 @media only screen and (min-width: 921px) and (max-width:1020px) {
   .left {
-    z-index: 5;
     left: -260px
   }
   .right {
@@ -47,7 +61,6 @@
 
 @media only screen and (min-width: 461px) and (max-width:920px) {
   .left {
-    z-index: 5;
     left: -260px
   }
   .right {
@@ -68,7 +81,6 @@
     display: none
   }
   .left {
-    z-index: 5;
     left: -270px;
     width: 260px
   }
